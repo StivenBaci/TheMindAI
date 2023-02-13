@@ -77,7 +77,7 @@ class Game:
 
 
     def dealCards(self):
-        for round in range(self.level):    
+        for _ in range(self.level):    
             for player in self.players:
                 if self.deck == []:
                     print("======= DECK EMPTY =========")
@@ -127,29 +127,50 @@ class Player(Game):
         self.hand.append( game.deck[-1])
         game.deck.pop()
 
+
     def throwCard(self, game):
-        self.hand.sort()                         #sort before throwing
-        if self.hand == []:                      #not needed to sort every throw
-            print("You don't have a card")       #move to eval or drawCards
+        self.hand.sort()
+        lowest_card = self.hand[0]
+        if len(self.hand) == 0:
+            return "You don't have a card, please draw."
         else:
-            lowest_card = self.hand[0]              #always sorted
-            if game.field == []:
-                pass
-            if game.field[-1] > lowest_card:
-                print("Mistake! You have a", lowest_card)
-                game.lives -= 1
+            if len(game.field) >= 0:
+                game.field.append(lowest_card)
                 self.discardCard(lowest_card)
-            try:    
-                if self.hand[1] - 1 == self.hand[0]:
-                    game.field.append(lowest_card)
-                    del self.hand[0]
-                    game.field.append(self.hand[0])
-                    del self.hand[0]
-            except IndexError:
-                pass
-            game.field.append(self.hand[0])         #throwing after conditions
-            del self.hand[0]                        # ERROR!!!!!!!!!!!!!!! FLAW
-        game.eval()
+            else:
+                try:
+                    if game.field[-1] > lowest_card:
+                        game.lives -= 1
+                        self.discardCard(lowest_card)
+                except Exception as e:
+                    print(e)
+                    print("Mistake! You have a", lowest_card)
+                    return "ERROR!!"
+
+
+    # def throwCard(self, game):
+    #     self.hand.sort()                         #sort before throwing
+    #     if self.hand == []:                      #not needed to sort every throw
+    #         print("You don't have a card")       #move to eval or drawCards
+    #     else:
+    #         lowest_card = self.hand[0]              #always sorted
+    #         if game.field == []:
+    #             pass
+    #         if game.field[-1] > lowest_card:
+    #             print("Mistake! You have a", lowest_card)
+    #             game.lives -= 1
+    #             self.discardCard(lowest_card)
+    #         try:    
+    #             if self.hand[1] - 1 == self.hand[0]:
+    #                 game.field.append(lowest_card)
+    #                 del self.hand[0]
+    #                 game.field.append(self.hand[0])
+    #                 del self.hand[0]
+    #         except IndexError:
+    #             pass
+    #         game.field.append(self.hand[0])         #throwing after conditions
+    #         del self.hand[0]                        # ERROR!!!!!!!!!!!!!!! FLAW
+    #         game.eval()
 
 
 
